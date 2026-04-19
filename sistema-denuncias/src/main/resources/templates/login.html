@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top left, #0033cc, #990000);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            width: 360px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            color: white;
+        }
+
+        .login-container h2 {
+            margin-bottom: 20px;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+
+        .input-field {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .input-field input::placeholder {
+            color: #ddd;
+        }
+
+        .input-field input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-login {
+            width: 100%;
+            background: linear-gradient(45deg, #0059ff, #e60000);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-login:hover {
+            transform: scale(1.05);
+            background: linear-gradient(45deg, #0033cc, #cc0000);
+        }
+
+        .links {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: #ff4d4d;
+            background-color: rgba(255, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* 📱 RESPONSIVE PARA CELULAR */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+
+            .login-container {
+                width: 100%;
+                max-width: 350px;
+                padding: 30px;
+            }
+
+            .login-container h2 {
+                font-size: 24px;
+            }
+
+            .btn-login {
+                font-size: 15px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <h2>Iniciar Sesión</h2>
+
+        <!-- Mostrar error si existe -->
+        <div th:if="${error}" class="error" th:text="${error}"></div>
+        <div th:if="${mensaje}" class="error" style="color:#00ffcc;" th:text="${mensaje}"></div>
+
+        <form th:action="@{/auth/login}" method="post">
+            <div class="input-field">
+                <input type="email" name="correo" placeholder="Correo electrónico" required>
+            </div>
+
+            <div class="input-field">
+                <input type="password" name="contrasena" placeholder="Contraseña" required>
+            </div>
+
+            <button type="submit" class="btn-login">Ingresar</button>
+        </form>
+
+        <div class="links">
+            <p>¿No tienes una cuenta? <a href="/auth/register">Regístrate aquí</a></p>
+        </div>
+    </div>
+</body>
+</html>

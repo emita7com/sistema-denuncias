@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Estudiante</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top left, #0033cc, #990000);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .register-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            width: 400px;
+            max-width: 95%;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            color: white;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 26px;
+            letter-spacing: 1px;
+        }
+
+        .input-field {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #ddd;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+        }
+
+        input::placeholder {
+            color: #ccc;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-register {
+            width: 100%;
+            background: linear-gradient(45deg, #0059ff, #e60000);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-register:hover {
+            transform: scale(1.05);
+            background: linear-gradient(45deg, #0033cc, #cc0000);
+        }
+
+        .links {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: #ff4d4d;
+            background-color: rgba(255, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* 📱 RESPONSIVE MOBILE */
+        @media (max-width: 768px) {
+            .register-container {
+                width: 100%;
+                padding: 25px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            input, select {
+                font-size: 14px;
+                padding: 9px;
+            }
+
+            .btn-register {
+                padding: 10px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="register-container">
+    <h2>Registro de Estudiante</h2>
+
+    <!-- Mensaje de error -->
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+
+    <!-- Formulario -->
+    <form th:action="@{/auth/register}" method="post">
+
+        <div class="input-field">
+            <label>Nombre</label>
+            <input type="text" name="nombre" placeholder="Ingresa tu nombre" required>
+        </div>
+
+        <div class="input-field">
+            <label>Apellido</label>
+            <input type="text" name="apellido" placeholder="Ingresa tu apellido" required>
+        </div>
+
+        <div class="input-field">
+            <label>Curso</label>
+            <input type="text" name="curso" placeholder="Ejemplo: 6to de Secundaria" required>
+        </div>
+
+        <div class="input-field">
+            <label>Correo electrónico</label>
+            <input type="email" name="correo" placeholder="ejemplo@gmail.com" required>
+        </div>
+
+        <div class="input-field">
+            <label>Contraseña</label>
+            <input type="password" name="contrasena" placeholder="Crea una contraseña" required>
+        </div>
+
+        <div class="input-field">
+            <label>Colegio</label>
+            <select name="idColegio" required>
+                <option value="">Selecciona tu colegio</option>
+                <option th:each="colegio : ${colegios}"
+                        th:value="${colegio.idColegio}"
+                        th:text="${colegio.nombre}">
+                </option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-register">Registrar</button>
+    </form>
+
+    <div class="links">
+        <p>¿Ya tienes una cuenta? <a href="/auth/login">Inicia sesión aquí</a></p>
+    </div>
+</div>
+</body>
+</html>

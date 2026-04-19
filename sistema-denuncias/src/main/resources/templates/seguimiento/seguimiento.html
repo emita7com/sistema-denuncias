@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Seguimiento del caso</title>
+    <style>
+        body { background-color: #f4f2ff; font-family: Arial, sans-serif; padding: 30px; }
+        h1 { color: #4a1dc9; }
+        .seguimiento-card { background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .autor { font-weight: bold; color: #5628c2; }
+        textarea { width: 100%; height: 100px; border-radius: 10px; border: 1px solid #ccc; padding: 10px; margin-top: 10px; }
+        button { margin-top: 10px; background: #5c2de3; color: white; padding: 10px 15px; border: none; border-radius: 8px; cursor: pointer; }
+        button:hover { background: #4419a3; }
+    </style>
+</head>
+<body>
+    <h1>Seguimiento del caso [[${denuncia.tipoAcoso}]]</h1>
+    <p><strong>Descripción:</strong> [[${denuncia.descripcion}]]</p>
+    <hr>
+
+    <h2>Historial de Seguimientos</h2>
+    <div th:each="seg : ${seguimientos}" class="seguimiento-card">
+        <p class="autor" th:text="${seg.autorRol} + ' (' + ${#temporals.format(seg.fecha, 'dd/MM/yyyy HH:mm')} + ')'"></p>
+        <p th:text="${seg.comentario}"></p>
+    </div>
+
+    <hr>
+    <h3>Agregar nuevo seguimiento</h3>
+    <form th:action="@{'/seguimiento/guardar/' + ${denuncia.idDenuncia}}" method="post" th:object="${nuevoSeguimiento}">
+        <textarea th:field="*{comentario}" placeholder="Escribe tu observación..." required></textarea>
+        <button type="submit">Guardar seguimiento</button>
+    </form>
+
+    <br><a href="javascript:history.back()">⬅ Volver</a>
+</body>
+</html>

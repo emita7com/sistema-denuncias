@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel del Administrador</title>
+
+    <!-- Fuente -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- ChartJS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            margin: 0;
+            background: #eef2ff;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0038ff, #d00000);
+            color: white;
+            padding: 25px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 3px 0 12px rgba(0,0,0,0.25);
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-weight: 600;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            padding: 14px;
+            margin-bottom: 12px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.25s;
+            text-align: center;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,0.35);
+            transform: translateX(5px);
+        }
+
+        .active-menu {
+            background: rgba(255,255,255,0.45);
+            font-weight: bold;
+        }
+
+        .main {
+            margin-left: 280px;
+            padding: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+            box-shadow: 0 7px 15px rgba(0,0,0,0.12);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: #0038ff;
+            color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            font-size: 14px;
+        }
+
+        tr:nth-child(even) {
+            background: #f7f7f7;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+
+        .btn-blue { background: #0038ff; color: white; }
+        .btn-green { background: #00c853; color: white; }
+        .btn-red { background: #d00000; color: white; }
+
+        .seccion { display: none; animation: fade 0.4s ease; }
+        @keyframes fade { from {opacity: 0;} to {opacity: 1;} }
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <h2>Admin</h2>
+
+    <div class="menu-item" onclick="mostrar('sec-director')">Registrar Director</div>
+    <div class="menu-item" onclick="mostrar('sec-psicologo')">Registrar Psicólogo</div>
+    <div class="menu-item" onclick="mostrar('sec-defensoria')">Registrar Defensoría</div>
+
+    <hr style="border: 0.5px solid rgba(255,255,255,0.3); margin: 25px 0;">
+
+    <div class="menu-item" onclick="mostrar('sec-usuarios')">Usuarios</div>
+    <div class="menu-item" onclick="mostrar('sec-denuncias')">Denuncias</div>
+    <div class="menu-item" onclick="mostrar('sec-estadisticas')">Estadísticas</div>
+
+    <form th:action="@{/auth/logout}" method="post" style="margin-top: 30px;">
+        <button class="btn-red btn w-100">Cerrar sesión</button>
+    </form>
+</div>
+
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+    <h3>Panel del Administrador</h3>
+
+    <!-- SECCIÓN DIRECTOR -->
+    <div id="sec-director" class="seccion">
+        <div class="card">
+            <h3>Registrar Director</h3>
+
+            <form th:action="@{/admin/registrar/director}" method="post">
+                <input type="text" name="nombre" placeholder="Nombre" required>
+                <input type="text" name="apellido" placeholder="Apellido" required>
+                <input type="email" name="correo" placeholder="Correo" required>
+                <input type="password" name="contrasena" placeholder="Contraseña" required>
+
+                <select name="colegioId" required>
+                    <option value="">Seleccione un colegio</option>
+                    <option th:each="col : ${colegios}"
+                            th:value="${col.idColegio}"
+                            th:text="${col.nombre}"></option>
+                </select>
+
+                <button class="btn-blue">Registrar</button>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- SECCIÓN PSICÓLOGO -->
+    <div id="sec-psicologo" class="seccion">
+        <div class="card">
+            <h3>Registrar Psicólogo</h3>
+
+            <form th:action="@{/admin/registrar/psicologo}" method="post">
+                <input type="text" name="nombre" placeholder="Nombre" required>
+                <input type="text" name="apellido" placeholder="Apellido" required>
+                <input type="email" name="correo" placeholder="Correo" required>
+                <input type="password" name="contrasena" placeholder="Contraseña" required>
+
+                <!-- Seleccionar colegio -->
+    <select name="colegioId" required>
+        <option value="">Seleccione un colegio</option>
+        <option th:each="col : ${colegios}"
+                th:value="${col.idColegio}"
+                th:text="${col.nombre}">
+        </option>
+    </select>
+
+                <button class="btn-blue">Registrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DEFENSORIA -->
+    <div id="sec-defensoria" class="seccion">
+        <div class="card">
+            <h3>Registrar Defensoría</h3>
+
+            <form th:action="@{/admin/registrar/defensoria}" method="post">
+                <input type="text" name="nombre" placeholder="Nombre" required>
+                <input type="text" name="responsable" placeholder="Responsable" required>
+                <input type="text" name="direccion" placeholder="Dirección" required>
+                <input type="text" name="telefono" placeholder="Teléfono">
+                <input type="email" name="correo" placeholder="Correo" required>
+                <input type="password" name="contrasena" placeholder="Contraseña" required>
+                <button class="btn-blue">Registrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SECCIÓN USUARIOS -->
+    <div id="sec-usuarios" class="seccion">
+        <div class="card">
+            <h3>Usuarios Registrados</h3>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="usuario : ${usuarios}">
+                    <td th:text="${usuario.idUsuario}"></td>
+                    <td th:text="${usuario.correo}"></td>
+                    <td th:text="${usuario.rol}"></td>
+                    <td th:text="${usuario.estado}"></td>
+                    <td>
+                        <form th:action="@{'/admin/activar/' + ${usuario.idUsuario}}" method="post" style="display:inline;">
+                            <button class="btn-green">Activar</button>
+                        </form>
+
+                        <form th:action="@{'/admin/desactivar/' + ${usuario.idUsuario}}" method="post" style="display:inline;">
+                            <button class="btn-red">Desactivar</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DENUNCIAS -->
+    <div id="sec-denuncias" class="seccion">
+        <div class="card">
+            <h3>Denuncias Registradas</h3>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th><th>Tipo</th><th>Descripción</th><th>Fecha</th><th>Estado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="denuncia : ${denuncias}">
+                    <td th:text="${denuncia.id_denuncia}"></td>
+                    <td th:text="${denuncia.tipo_acoso}"></td>
+                    <td th:text="${denuncia.descripcion}"></td>
+                    <td th:text="${#temporals.format(denuncia.fecha,'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${denuncia.estado}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SECCIÓN ESTADISTICAS -->
+    <div id="sec-estadisticas" class="seccion">
+        <div class="card">
+            <h3>Estadísticas</h3>
+            <canvas id="graficoAcoso" width="400" height="200"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<!-- CAMBIO DE SECCIONES -->
+<script>
+    function mostrar(id) {
+        document.querySelectorAll('.seccion').forEach(s => s.style.display = "none");
+        document.getElementById(id).style.display = "block";
+
+        document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active-menu'));
+        event.target.classList.add('active-menu');
+    }
+    mostrar('sec-usuarios');
+</script>
+
+
+<!-- GRÁFICO -->
+<script th:inline="javascript">
+    const ctx = document.getElementById('graficoAcoso');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["Ciberacoso", "Bullying", "Discriminación"],
+            datasets: [{
+                label: "Cantidad de denuncias",
+                data: [
+                    /*[[${ciberacoso}]],
+                    [[${bullying}]],
+                    [[${discriminacion}]]*/
+                ],
+                backgroundColor: [
+                    "rgba(255, 99, 132, 0.7)",
+                    "rgba(54, 162, 235, 0.7)",
+                    "rgba(255, 206, 86, 0.7)"
+                ]
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+<!-- ALERTA SWEETALERT -->
+<script th:if="${exito != null}">
+Swal.fire({
+    icon: 'success',
+    title: '¡Éxito!',
+    text: '[[${exito}]]',
+    confirmButtonColor: '#3085d6'
+});
+</script>
+
+</body>
+</html>

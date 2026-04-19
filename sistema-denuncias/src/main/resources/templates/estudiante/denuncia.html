@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Registrar Denuncia</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0047b3, #a00000);
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ⭐ LÍNEA SEPARADORA NUEVA ⭐ */
+.header-separador {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.35);
+    margin-top: 20px;
+    margin-bottom: 35px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+/* ------------- HEADER NUEVO ---------------- */
+
+header {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    padding: 25px 50px;
+    align-items: center;
+}
+
+/* IZQUIERDA */
+.header-left h1 {
+    font-size: 2.2rem;
+    margin: 0;
+    font-weight: 600;
+}
+
+.header-left p {
+    margin: 8px 0 0;
+    font-size: 1.05rem;
+    opacity: 0.95;
+}
+
+/* DERECHA */
+.profile-box {
+    background: rgba(255,255,255,0.15);
+    padding: 15px;
+    border-radius: 20px;
+    text-align: center;
+    width: 260px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.35);
+}
+
+.profile-box img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    object-fit: cover;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.profile-box img:hover {
+    transform: scale(1.05);
+}
+
+.profile-box p {
+    margin: 3px 0;
+}
+
+/* ------------- TARJETAS ---------------- */
+
+.tipos-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 45px;
+}
+
+.tipo-card {
+    background: rgba(255,255,255,0.18);
+    padding: 28px;
+    width: 240px;
+    border-radius: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.25s;
+    box-shadow: 0 0 15px rgba(0,0,0,0.45);
+}
+
+.tipo-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255,255,255,0.28);
+}
+
+.tipo-card img {
+    width: 130px;
+    height: 130px;
+    border-radius: 15px;
+    margin-bottom: 12px;
+}
+
+/* ------------- FORMULARIO ---------------- */
+
+.formulario {
+    margin: 50px auto;
+    background: rgba(0,0,0,0.35);
+    padding: 40px;
+    width: 55%;
+    border-radius: 22px;
+    box-shadow: 0 0 18px rgba(0,0,0,0.4);
+}
+
+textarea {
+    height: 120px;
+    resize: none;
+    border-radius: 14px;
+}
+
+/* inputs */
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    margin: 12px 0;
+    font-size: 1em;
+}
+
+button.enviar {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg, #0047b3, #cc0000);
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-top: 12px;
+    transition: 0.3s;
+}
+
+button.enviar:hover {
+    transform: scale(1.03);
+}
+
+/* ------------- MODAL FOTO ---------------- */
+
+#modalFoto {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+#modalContenido {
+    background: white;
+    color: black;
+    padding: 25px;
+    border-radius: 15px;
+    width: 330px;
+    text-align: center;
+}
+
+/* ------------- FOOTER ---------------- */
+
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-bottom: 25px;
+    opacity: 0.8;
+}
+
+/* 📱📱📱 RESPONSIVE (CELULARES) 📱📱📱 */
+@media (max-width: 768px) {
+
+    body {
+        padding-bottom: 10px;
+    }
+
+    header {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .profile-box {
+        margin: 10px auto 0 auto;
+        width: 90%;
+    }
+
+    .header-left h1 {
+        font-size: 1.6rem;
+    }
+
+    .header-left p {
+        font-size: 0.9rem;
+    }
+
+    .header-separador {
+        height: 4px;
+        width: 92%;
+        margin: 10px auto 20px auto;
+    }
+
+    /* TARJETAS */
+    .tipos-container {
+        flex-direction: column;
+        gap: 15px;
+        padding: 0 10px;
+    }
+
+    .tipo-card {
+        width: 100%;
+    }
+
+    .tipo-card img {
+        width: 100px;
+        height: 100px;
+    }
+
+    /* FORMULARIO ––– AQUI VIENE EL ARREGLO 👇👇👇 */
+    .formulario {
+        width: 100%;              /* OCUPA TODO */
+        padding: 20px 15px;       /* MENOS MARGEN */
+        margin: 20px 0;           /* BAJA UN POCO */
+        border-radius: 0;         /* SE UNE CON EL FONDO */
+        box-shadow: none;         /* QUITA EL MARCO QUE HACE VER HUECO */
+        background: rgba(0,0,0,0.28); /* Más suave en móvil */
+    }
+
+    textarea {
+        height: 140px;
+    }
+
+    footer {
+        margin-top: 10px;
+        padding-bottom: 20px;
+        font-size: 0.85rem;
+    }
+}
+
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="header-left">
+        <h1>👋 Bienvenido/a <span th:text="${nombreUsuario}">Estudiante</span></h1>
+        <p>Tu seguridad es nuestra prioridad. Gracias por confiar y dar este paso con valentía. ❤️</p>
+    </div>
+
+    <div class="profile-box">
+        <img th:src="${estudiante.foto != null ? '/uploads/' + estudiante.foto : '/img/user_default.png'}"
+             onclick="document.getElementById('modalFoto').style.display='flex'">
+
+        <p><b th:text="${estudiante.nombre}"></b></p>
+        <p style="font-size:0.9em;">Curso: <span th:text="${estudiante.curso}"></span></p>
+        <p style="font-size:0.9em;"><span th:text="${estudiante.colegio.nombre}"></span></p>
+    </div>
+
+</header>
+
+<div class="header-separador"></div>
+
+<div class="tipos-container">
+
+    <div class="tipo-card" onclick="seleccionarTipo('Bulling')">
+        <img src="/img/bulling.jpg">
+        <h2>Bulling</h2>
+    </div>
+
+    <div class="tipo-card" onclick="seleccionarTipo('Ciberacoso')">
+        <img src="/img/ciberacoso.jpg">
+        <h2>Ciberacoso</h2>
+    </div>
+
+    <div class="tipo-card" onclick="seleccionarTipo('Discriminación')">
+        <img src="/img/discriminacion.jpg">
+        <h2>Discriminación</h2>
+    </div>
+
+</div>
+
+<form th:action="@{/denuncias/guardar}" method="post" enctype="multipart/form-data" class="formulario">
+
+    <label>Tipo de acoso</label>
+    <select name="tipo_acoso" id="tipo_acoso" required>
+        <option value="">Seleccione…</option>
+        <option>Bulling</option>
+        <option>Ciberacoso</option>
+        <option>Discriminación</option>
+    </select>
+
+    <label>Descripción</label>
+    <textarea name="descripcion" placeholder="Describe lo sucedido..."></textarea>
+
+    <label>Evidencia (imagen o PDF)</label>
+    <input type="file" name="archivoEvidencia" accept="image/*,.pdf">
+
+    <label><input type="checkbox" name="confidencial"> Mantener confidencial</label>
+
+    <button class="enviar" type="submit">Enviar denuncia</button>
+</form>
+
+<div id="modalFoto">
+    <div id="modalContenido">
+        <h3>Actualizar foto de perfil</h3>
+
+        <form th:action="@{/estudiantes/subir-foto}" method="post" enctype="multipart/form-data">
+            <input type="file" name="file" required><br><br>
+            <button type="submit" style="background:#0047b3;color:white;padding:8px 15px;border:none;border-radius:8px;">Subir</button>
+            <button type="button"
+                onclick="document.getElementById('modalFoto').style.display='none'"
+                style="margin-left:10px;padding:8px 15px;">Cancelar</button>
+        </form>
+
+    </div>
+</div>
+
+<footer>
+    Defensoría del Estudiante — Universidad Amazónica de Pando
+</footer>
+
+<script>
+function seleccionarTipo(tipo) {
+    document.getElementById("tipo_acoso").value = tipo;
+}
+</script>
+
+</body>
+</html>

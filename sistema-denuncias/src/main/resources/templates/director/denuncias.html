@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel del Director</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef2f7;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(to right, #002b5c, #0066cc);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .perfil-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .perfil-box img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+            cursor: pointer;
+        }
+
+        .container {
+            margin: 30px auto;
+            width: 95%;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.15);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background-color: #002b5c;
+            color: white;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            background: #f9f9f9;
+            border-bottom: 1px solid #d9d9d9;
+        }
+
+        .btn-derivar {
+            padding: 8px 12px;
+            background-color: #b71c1c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Modal */
+        #modalFoto {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            padding-top: 100px;
+            text-align: center;
+        }
+
+        #modalContenido {
+            background: white;
+            width: 350px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .btn-subir {
+            background: #0066cc;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-cancelar {
+            padding: 8px 15px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="header">
+    <h2>📋 Denuncias derivadas a Dirección</h2>
+
+    <div class="perfil-box">
+        <div style="text-align:center;">
+            <img class="profile-img"
+                 th:src="${director.foto_perfil != null ? '/uploads/' + director.foto_perfil : '/img/default-user.png'}"
+                 onclick="document.getElementById('modalFoto').style.display='block'">
+
+            <button style="
+                margin-top:8px;
+                background:#cc0000;
+                color:white;
+                border:none;
+                padding:6px 12px;
+                border-radius:6px;
+                cursor:pointer;
+            " onclick="document.getElementById('modalFoto').style.display='block'">
+                Cambiar foto
+            </button>
+        </div>
+
+        <div class="perfil-info">
+            <strong th:text="${director.nombre + ' ' + director.apellido}"></strong><br>
+            <span th:text="${director.colegio.nombre}"></span><br>
+            <span th:text="${director.usuario.correo}"></span>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Estudiante</th>
+            <th>Tipo de acoso</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Acción</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="denuncia : ${denuncias}">
+            <td th:text="${denuncia.idDenuncia}"></td>
+
+            <td th:text="${denuncia.estudiante.nombre + ' ' + denuncia.estudiante.apellido}"></td>
+            <td th:text="${denuncia.tipo_acoso}"></td>
+            <td th:text="${#temporals.format(denuncia.fecha, 'yyyy-MM-dd HH:mm')}"></td>
+            <td th:text="${denuncia.estado}"></td>
+
+            <td>
+                <form th:action="@{'/director/derivar/' + ${denuncia.idDenuncia}}" method="post">
+                    <button class="btn-derivar">📤 Derivar a Defensoría</button>
+                </form>
+            </td>
+
+        </tr>
+        </tbody>
+
+    </table>
+
+</div>
+
+<!-- MODAL PARA CAMBIAR FOTO -->
+<div id="modalFoto">
+    <div id="modalContenido">
+        <h3>Cambiar foto de perfil</h3>
+
+        <form th:action="@{/director/subir-foto}" method="post" enctype="multipart/form-data">
+            <input type="file" name="foto" required><br><br>
+
+            <button type="submit" class="btn-subir">Subir foto</button>
+
+            <button type="button" class="btn-cancelar"
+                    onclick="document.getElementById('modalFoto').style.display='none'">
+                Cancelar
+            </button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
